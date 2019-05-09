@@ -1,6 +1,8 @@
 package dom.paketi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -53,13 +55,13 @@ public class Menu {
     //---------------------------------------------------------------------------------
     // metode za izbor ----------------------------------------------------------------
 
-    private void createAnAccount() {   // program proverava da li ce korisnik da pristupi checking ili saving nalogu, a potom ga evidentira
-        String firstName, lastName, ssn, accountType = "";
-        double initialDeposit = 0;
+/*
+    private String getAccountType(){
+         String accountType = "";
         boolean valid = false;
         while (!valid) {
-            System.out.print("Please enter type of your account (checking/savings)");
-            accountType = keyboard.nextLine();
+            accountType = askQuestestion("Please enter type of your account (checking/savings)");
+
 
             if (accountType.equalsIgnoreCase("checking") || accountType.equalsIgnoreCase("savings")) {
                 valid = true;
@@ -69,13 +71,45 @@ public class Menu {
             }
 
         }
-        System.out.print("Please enter your first name");
-        firstName = keyboard.nextLine();
-        System.out.print("Please enter your last name");
-        lastName = keyboard.nextLine();
-        System.out.print("Please enter your social number");
-        ssn = keyboard.nextLine();
-         valid = false;
+        return accountType;
+    }
+*/
+
+    private String askQuestestion(String question, List<String> answers){
+        String response = "";
+        Scanner input = new Scanner(System.in);
+        boolean choices = answers == null ? false : true;
+        boolean firstRun = true;
+        do{
+            if(!firstRun){
+                System.out.print("Invalid selection, please try again!");
+            }
+            System.out.print(question);
+            if (answers != null) {
+                System.out.println("(");
+                for (int i = 0 ;i< answers.size() -1;++i){
+                    System.out.println(answers.get(i) +"/");
+
+
+                }
+                System.out.print(answers.get(answers.size() - 1));
+                System.out.print(") :");
+            }
+            response = input.nextLine();
+            firstRun = false;
+                if(!choices){
+                    break;
+                }
+        }while (!answers.contains(response));
+
+        return response;
+    }
+
+
+    private double getDeposit(String accountType){
+        double initialDeposit = 0;
+        boolean valid = false;
+        valid = false;
 
         while (!valid) {
             System.out.print("Please enter your initial deposit");
@@ -106,6 +140,20 @@ public class Menu {
             }
 
         }
+    return  initialDeposit;
+    }
+
+
+
+    private void createAnAccount() {   // program proverava da li ce korisnik da pristupi checking ili saving nalogu, a potom ga evidentira
+
+
+        List<String> accountTypes = Arrays.asList("checking", "savings");
+        String accountType = askQuestestion("Please enter type of your account :", accountTypes);
+        String firstName = askQuestestion("Please enter your first name", null);
+        String lastName = askQuestestion("Please enter your last name", null);
+        String ssn = askQuestestion("Please enter your social number", null);
+        double initialDeposit = getDeposit(accountType);
 
         Account account;
         if (accountType.equalsIgnoreCase("checking")) {
@@ -131,7 +179,7 @@ public class Menu {
             System.out.println(bank.getCustomer(account).getAccount());
 
 
-        }   
+        }
     }
     private void makeAWithdrawal() {
 
